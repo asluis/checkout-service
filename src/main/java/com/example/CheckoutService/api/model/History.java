@@ -1,18 +1,36 @@
 package com.example.CheckoutService.api.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity // This tells Hibernate to make a table out of this class
 public class History {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String buyerID;
     private String sellerID;
     private String listingTitle;
     private int listingID;
     private float listingPrice;
 
-    public History(String buyerID, String sellerID, String listingTitle, int listingID, float listingPrice){
+    public History( String buyerID, String sellerID, String listingTitle, int listingID, float listingPrice){
         this.buyerID = buyerID;
         this.sellerID = sellerID;
         this.listingID = listingID;
         this.listingTitle = listingTitle;
         this.listingPrice = listingPrice;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getBuyerID() {
