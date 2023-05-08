@@ -21,14 +21,14 @@ public class HistoryService{
     }
 
     public List<History> findBySellerID(String sellerID) {
-        return null;
+        return histRepo.findBySellerID(sellerID);
     }
 
     public List<History> findByBuyerID(String buyerID) {
-        return null;
+        return histRepo.findByBuyerID(buyerID);
     }
 
     public List<History> findByListingTitle(String listingTitle) {
-        return null;
+        return histRepo.findByListingTitle(listingTitle);
     }
 }
