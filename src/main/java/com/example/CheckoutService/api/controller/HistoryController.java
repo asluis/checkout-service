@@ -3,14 +3,12 @@ package com.example.CheckoutService.api.controller;
 import com.example.CheckoutService.api.model.History;
 import com.example.CheckoutService.api.service.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path = "/history") // This means URL's start with /history (after Application path)
@@ -20,18 +18,59 @@ public class HistoryController{
     @Autowired
     private HistoryRepository histRepo;
 
+    /**
+     * Gets an individual transaction by its history id.
+     * @param id
+     * @return
+     */
     @GetMapping(path = "/get")
     public @ResponseBody History getHist(@RequestParam int id){
         // @ResponseBody means the returned String is the response, not a view name
-        // @ReqestParam means it is a parameter from the GET or POST request
+        // @RequestParam means it is a parameter from the GET or POST request
 
         History x = histRepo.findById(id).get();
 
         return x;
     }
 
+    /**
+     * /get endpoint retrieves history transaction objects from the database.
+     * @param isTitle - denotes whether {id} contains a title to query
+     * @param isSeller - denotes whether {id} contains a seller id or a buyer id
+     * @param id - string data that can either hold title of listing, buyer id, or seller id.
+     * @return List<History> object representing the results of the query.
+     */
+    @GetMapping(path = "/get")
+    public @ResponseBody List<History> getHist(@RequestParam boolean isTitle, @RequestParam boolean isSeller,
+                                               @RequestParam String id){
+        // @ResponseBody means the returned String is the response, not a view name
+        // @RequestParam means it is a parameter from the GET or POST request
+
+        List<History> data;
+
+        if(isTitle){
+            data = histRepo.findByListingTitle(id);
+        }else if(isSeller) {
+            data = histRepo.findBySellerID(id);
+        }else{
+            data = histRepo.findByBuyerID(id);
+        }
+
+        return data;
+    }
+
+
+    /**
+     *  Creates a history object and stores it in the database. Returns true success if it worked, else false success.
+     * @param buyerID
+     * @param sellerID
+     * @param title
+     * @param listingID
+     * @param price
+     * @return
+     */
     @PostMapping(path="/create")
-    public @ResponseBody HashMap<String, String> createHist(@RequestParam String buyerID, @RequestParam String sellerID,
+    public @ResponseBody HashMap<String, Boolean> createHist(@RequestParam String buyerID, @RequestParam String sellerID,
                                                             @RequestParam String title, @RequestParam int listingID,
                                                             @RequestParam float price){
 
@@ -42,10 +81,13 @@ public class HistoryController{
         temp.setListingPrice(price);
         temp.setListingTitle(title);
 
-        histRepo.save(temp);
-
-        HashMap<String, String> status = new HashMap<>();
-        status.put("status", "success");
+        HashMap<String, Boolean> status = new HashMap<>();
+        try{
+            histRepo.save(temp);
+            status.put("success", true);
+        }catch(Exception e){
+            status.put("status", false);
+        }
 
         return status;
     }
