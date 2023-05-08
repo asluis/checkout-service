@@ -15,12 +15,12 @@ public class HistoryRepositoryImpl implements HistoryRepository{
 
     @Override
     public List<History> findBySellerID(String sellerID){
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder(); // gets query builder
 
-        CriteriaQuery<History> query = cb.createQuery(History.class);
-        Root<History> history = query.from(History.class);
+        CriteriaQuery<History> query = cb.createQuery(History.class); // create query
+        Root<History> history = query.from(History.class); // specify class / table we want to look at
 
-        Path<String> sIDPath = history.get("sellerID");
+        Path<String> sIDPath = history.get("sellerID"); // grab sellerID column
 
         query.select(history).where(cb.equal(sIDPath, sellerID)); // is current sID equal to given sellerID?
 
