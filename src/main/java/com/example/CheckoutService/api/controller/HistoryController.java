@@ -1,11 +1,9 @@
 package com.example.CheckoutService.api.controller;
 
 import com.example.CheckoutService.api.model.History;
-import com.example.CheckoutService.api.service.HistoryService;
-import jakarta.websocket.server.PathParam;
+import com.example.CheckoutService.api.service.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,10 +12,10 @@ import java.util.Optional;
 @RestController
 public class HistoryController {
 
-    private HistoryService histService;
+    private HistoryRepository histService;
 
     @Autowired
-    public HistoryController(HistoryService service){
+    public HistoryController(HistoryRepository service){
         this.histService = service;
     }
 
