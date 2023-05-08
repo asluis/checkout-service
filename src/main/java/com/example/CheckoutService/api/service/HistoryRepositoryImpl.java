@@ -27,4 +27,32 @@ public class HistoryRepositoryImpl implements HistoryRepository{
         return entityManager.createQuery(query).getResultList();
     }
 
+    @Override
+    public List<History> findByBuyerID(String buyerID){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<History> query = cb.createQuery(History.class);
+        Root<History> history = query.from(History.class);
+
+        Path<String> bIDPath = history.get("buyerID");
+
+        query.select(history).where(cb.equal(bIDPath, buyerID));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<History> findByListingTitle(String title){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<History> query = cb.createQuery(History.class);
+        Root<History> history = query.from(History.class);
+
+        Path<String> titlePath = history.get("title");
+
+        query.select(history).where(cb.like(titlePath, title));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
 }
