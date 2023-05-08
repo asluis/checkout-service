@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Controller // This means that this class is a Controller
@@ -22,7 +23,7 @@ public class HistoryController{
     @GetMapping(path = "/get")
     public @ResponseBody History getHist(@RequestParam int id){
         // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
+        // @ReqestParam means it is a parameter from the GET or POST request
 
         History x = histRepo.findById(id).get();
 
@@ -30,9 +31,9 @@ public class HistoryController{
     }
 
     @PostMapping(path="/create")
-    public @ResponseBody String createHist(@RequestParam String buyerID, @RequestParam String sellerID,
-                                           @RequestParam String title, @RequestParam int listingID,
-                                           @RequestParam float price){
+    public @ResponseBody HashMap<String, String> createHist(@RequestParam String buyerID, @RequestParam String sellerID,
+                                                            @RequestParam String title, @RequestParam int listingID,
+                                                            @RequestParam float price){
 
         History temp = new History();
         temp.setBuyerID(buyerID);
@@ -42,7 +43,11 @@ public class HistoryController{
         temp.setListingTitle(title);
 
         histRepo.save(temp);
-        return "Saved";
+
+        HashMap<String, String> status = new HashMap<>();
+        status.put("status", "success");
+
+        return status;
     }
 
 }
