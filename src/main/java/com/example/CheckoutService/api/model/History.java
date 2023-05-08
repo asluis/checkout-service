@@ -25,6 +25,14 @@ public class History {
         this.listingPrice = listingPrice;
     }
 
+    public History(){
+        this.buyerID = null;
+        this.sellerID = null;
+        this.listingID = -1;
+        this.listingTitle = null;
+        this.listingPrice = 0;
+    }
+
     public long getId() {
         return id;
     }
