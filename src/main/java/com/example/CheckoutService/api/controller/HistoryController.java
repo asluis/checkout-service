@@ -1,13 +1,10 @@
 package com.example.CheckoutService.api.controller;
 
 import com.example.CheckoutService.api.model.History;
-import com.example.CheckoutService.api.service.HistoryRepository;
 import com.example.CheckoutService.api.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,8 +21,8 @@ public class HistoryController{
      * @param id
      * @return
      */
-    @GetMapping(path = "/get")
-    public @ResponseBody History getHist(@RequestParam int id){
+    @GetMapping(path = "/get/{id}")
+    public @ResponseBody History getHist(@PathVariable int id){
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
@@ -42,12 +39,13 @@ public class HistoryController{
      * @return List<History> object representing the results of the query.
      */
     @GetMapping(path = "/get")
-    public @ResponseBody List<History> getHist(@RequestParam boolean isTitle, @RequestParam boolean isSeller,
+    public @ResponseBody HashMap<String, List<History>> getHist(@RequestParam boolean isTitle, @RequestParam boolean isSeller,
                                                @RequestParam String id){
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-
         List<History> data;
+
+        HashMap<String, List<History>> payload = new HashMap<>();
 
         if(isTitle){
             data = historyService.findByListingTitle(id);
@@ -57,7 +55,9 @@ public class HistoryController{
             data = historyService.findByBuyerID(id);
         }
 
-        return data;
+        payload.put("data", data);
+
+        return payload;
     }
 
 
